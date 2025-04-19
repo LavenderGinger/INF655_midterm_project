@@ -21,16 +21,17 @@ class Task extends React.Component {
 
   render() {
     const { tasks, onDeleteTask } = this.props;
+
     let filteredTasks = tasks.filter((task) => {
-      const taskString = typeof task === 'string' ? task : task.name || '';
-      return taskString.toLowerCase().includes(this.state.searchTerm.toLowerCase());
+      const name = task.taskName || "";
+      return name.toLowerCase().includes(this.state.searchTerm.toLowerCase());
     });
 
     if (this.state.isSorted) {
       filteredTasks = [...filteredTasks].sort((a, b) => {
-        const aString = typeof a === 'string' ? a : a.name || '';
-        const bString = typeof b === 'string' ? b : b.name || '';
-        return aString.localeCompare(bString);
+        const aName = a.taskName || "";
+        const bName = b.taskName || "";
+        return aName.localeCompare(bName);
       });
     }
 
@@ -44,15 +45,22 @@ class Task extends React.Component {
           onChange={this.handleSearch}
         />
         <button onClick={this.sortTasks}>
-          {this.state.isSorted ? "Unsort" : "Sort by the Name"}
+          {this.state.isSorted ? "Unsort" : "Sort by Name"}
         </button>
         <ul>
-          {filteredTasks.map((task, index) => (
-            <li key={index}>
-              {typeof task === 'string' ? task : task.name} 
-              <button onClick={() => onDeleteTask(index)}>DELETE!</button>
-            </li>
-          ))}
+          {filteredTasks.length === 0 ? (
+            <li>No tasks yet!</li>
+        ) : (
+            filteredTasks.map((task, index) => (
+              <li key={task.id ?? index}>
+                <strong>{task.taskName}</strong>
+                {task.taskDescription && <>: {task.taskDescription}</>}
+                {task.id && (
+                  <button onClick={() => onDeleteTask(task.id)}>DELETE!</button>
+                )}
+              </li>
+            ))
+          )} 
         </ul>
       </div>
     );

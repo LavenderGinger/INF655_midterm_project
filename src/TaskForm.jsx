@@ -7,13 +7,13 @@ function TaskForm({ onAddTask }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (taskName.trim() === "" || taskDescription.trim() === "") {
       setError("Task name and description are needed.");
       return;
     }
 
-    onAddTask({ name: taskName, description: taskDescription });
+    onAddTask(taskName, taskDescription);
     setTaskName("");
     setTaskDescription("");
     setError("");
